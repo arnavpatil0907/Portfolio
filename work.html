@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ═══════════════════════════════════════════════════════════════════
+  WORK INDEX — ALL DISCIPLINES  (part of the portfolio template)
+  ───────────────────────────────────────────────────────────────────
+  This is the "Selected Disciplines" frame from the home page as its
+  own page. EDIT the DISCIPLINES data block at the bottom of the
+  <script> — keep it in sync with the SITE data in index.html.
+  ═══════════════════════════════════════════════════════════════════
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Work — Arnav Patil</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230B0B0E'/%3E%3Cpath d='M50 18 82 50 50 82 18 50Z' fill='%237E92FF'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;800&family=Schibsted+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0B0B0E;--bg-2:#121218;--bg-3:#17171f;
+  --ivory:#E9E7DF;--dim:#9A9A93;--faint:#66665f;
+  --line:rgba(233,231,223,.10);--line-strong:rgba(233,231,223,.22);
+  --indigo:#7E92FF;--violet:#B48CFF;--red:#FF6276;--cyan:#5CE1FF;
+  --grad:linear-gradient(92deg,#7E92FF 0%,#B48CFF 48%,#FF6276 100%);
+  --accent:var(--indigo);--accent-glow:rgba(126,146,255,.3);
+  --font-display:'Unbounded',sans-serif;--font-body:'Schibsted Grotesk',sans-serif;--font-mono:'Space Mono',monospace;
+  --head-h:64px;--pad:clamp(20px,4.5vw,52px);--maxw:1320px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+/* hidden page scrollbar — the progress bar is the scroll indicator */
+html{scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+body{background:var(--bg);color:var(--ivory);font-family:var(--font-body);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.5}
+::selection{background:var(--accent);color:#0B0B0E}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+/* CRT scanlines — cyberpunk layer */
+body::before{content:"";position:fixed;inset:0;z-index:450;pointer-events:none;opacity:.045;background:repeating-linear-gradient(0deg,transparent 0 2px,#000 2px 3px)}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;display:flex;justify-content:space-evenly}
+.bg-grid span{width:1px;height:100%;background:rgba(233,231,223,.035)}
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:400}
+.progress span{display:block;height:100%;background:var(--grad);transform:scaleX(0);transform-origin:left}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,.84,.28,1),transform .8s cubic-bezier(.16,.84,.28,1)}
+.rv.in{opacity:1;transform:none}
+.sec-label{
+  display:inline-flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;color:var(--dim);
+  border:1px solid var(--line-strong);padding:9px 16px;background:rgba(16,16,22,.65);
+  clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));
+}
+.sec-label i{width:8px;height:8px;background:var(--accent);transform:rotate(45deg);box-shadow:0 0 10px var(--accent-glow)}
+.wm-wrap{position:relative;overflow:hidden;pointer-events:none;user-select:none}
+.wm{font-family:var(--font-display);font-weight:800;white-space:nowrap;font-size:clamp(80px,15vw,220px);line-height:1;color:transparent;-webkit-text-stroke:1px rgba(233,231,223,.08);will-change:transform;display:block;padding:.05em 0}
+.orn{position:absolute;z-index:0;pointer-events:none;user-select:none;font-size:clamp(18px,2.4vw,30px);opacity:.5;will-change:transform;text-shadow:0 0 20px currentColor}
+@keyframes glitch{
+  0%,90%,100%{text-shadow:none;transform:none}
+  91%{text-shadow:-3px 0 var(--red),3px 0 var(--cyan)}
+  93%{text-shadow:3px 0 var(--red),-3px 0 var(--cyan);transform:translateX(2px)}
+  95%{text-shadow:-2px 0 var(--cyan),2px 0 var(--violet);transform:translateX(-2px)}
+  97%{text-shadow:none}
+}
+
+/* header */
+header.site{position:fixed;top:0;left:0;right:0;z-index:300;height:var(--head-h);display:flex;align-items:center;background:rgba(11,11,14,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.head-in{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:16px;white-space:nowrap}
+.brand em{font-style:normal;width:9px;height:9px;background:var(--grad);transform:rotate(45deg);flex:none}
+.head-links{display:flex;align-items:center;gap:22px;font-family:var(--font-mono);font-size:12px;letter-spacing:.08em}
+.head-links a{color:var(--dim);transition:color .25s;white-space:nowrap}
+.head-links a:hover{color:var(--ivory)}
+.head-links .pill{border:1px solid var(--line-strong);border-radius:999px;padding:9px 18px;color:var(--ivory);display:inline-flex;align-items:center;gap:6px;line-height:1.4}
+.head-links .pill:hover{background:var(--accent);color:#0B0B0E;border-color:var(--accent)}
+
+/* discipline app bar */
+.disc-tabs{position:sticky;top:0;z-index:250;margin-top:var(--head-h);background:rgba(11,11,14,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.disc-tabs-in{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.disc-tabs-in::-webkit-scrollbar{display:none}
+.disc-tabs a{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--dim);padding:16px 16px 14px;white-space:nowrap;border-bottom:2px solid transparent;transition:.25s}
+.disc-tabs a:hover{color:var(--ivory)}
+.disc-tabs .lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;color:var(--faint);padding:18px 14px 0 0;flex:none}
+
+/* page head */
+.p-hero{position:relative;padding:70px 0 20px;z-index:1}
+.p-hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(36px,7vw,92px);line-height:1.02;text-transform:uppercase;letter-spacing:-.01em;margin-top:22px;animation:glitch 8s infinite}
+.p-hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.p-intro{margin-top:22px;color:var(--dim);font-size:clamp(15px,1.5vw,18px);line-height:1.65;max-width:58ch}
+
+/* stacked discipline cards (same as home) */
+.stack-sec{position:relative;z-index:1;padding:40px 0 60px}
+.stack{display:flex;flex-direction:column;gap:32px;padding-bottom:40px}
+.work-card{
+  position:sticky;top:calc(var(--head-h) + 70px);
+  background:linear-gradient(160deg,var(--bg-2),var(--bg-3));
+  border:1px solid var(--line-strong);border-radius:16px;
+  padding:clamp(24px,3.4vw,48px);
+  display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,3.5vw,56px);
+  box-shadow:0 -18px 60px rgba(0,0,0,.55);
+  will-change:transform,filter;
+}
+.work-card:nth-child(2){top:calc(var(--head-h) + 86px)}
+.work-card:nth-child(3){top:calc(var(--head-h) + 102px)}
+.work-card:nth-child(4){top:calc(var(--head-h) + 118px)}
+.wc-info{display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.wc-no{font-family:var(--font-mono);font-size:13px;color:var(--faint);letter-spacing:.1em;display:flex;justify-content:space-between;margin-bottom:22px;align-self:stretch}
+.wc-no b{color:var(--accent);font-weight:400}
+.work-card h3{font-family:var(--font-display);font-weight:600;font-size:clamp(26px,3.4vw,44px);text-transform:uppercase;line-height:1.05;letter-spacing:-.01em}
+.wc-tag{margin-top:14px;font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;color:var(--dim)}
+.wc-blurb{margin-top:20px;color:var(--dim);font-size:15px;line-height:1.65;max-width:48ch}
+.wc-cover{
+  border-radius:10px;border:1px solid var(--line);position:relative;overflow:hidden;min-height:340px;
+  background:repeating-linear-gradient(135deg,#141419,#141419 12px,#1a1a22 12px,#1a1a22 24px);
+  display:flex;align-items:center;justify-content:center;
+  transition:border-color .3s,box-shadow .3s;
+}
+a.wc-cover:hover,a.wc-cover:focus-visible{border-color:var(--accent);box-shadow:0 0 46px var(--accent-glow)}
+.wc-cover img,.wc-cover video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.wc-cover::before,.wc-cover::after{content:"";position:absolute;width:22px;height:22px;border:1px solid rgba(126,146,255,.6);z-index:1}
+.wc-cover::before{top:14px;left:14px;border-right:none;border-bottom:none}
+.wc-cover::after{bottom:14px;right:14px;border-left:none;border-top:none}
+.wc-cover .ph{font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;color:var(--faint);text-align:center;padding:0 20px}
+.wc-cover .ph b{display:block;font-size:30px;margin-bottom:10px;font-weight:400}
+.wc-open{
+  position:absolute;left:14px;bottom:14px;z-index:2;display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--ivory);
+  background:rgba(11,11,14,.75);border:1px solid var(--line-strong);border-radius:999px;
+  padding:10px 16px;backdrop-filter:blur(8px);transition:.25s;
+}
+a.wc-cover:hover .wc-open{background:var(--accent);color:#0B0B0E;border-color:var(--accent)}
+
+footer.site{border-top:1px solid var(--line);position:relative;z-index:1}
+.foot-in{max-width:var(--maxw);margin:0 auto;padding:28px var(--pad);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--faint)}
+.foot-in a{color:var(--dim);transition:.25s}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:1000px){
+  .work-card{grid-template-columns:1fr}
+  .wc-cover{min-height:240px;order:-1}
+}
+@media (max-width:820px){
+  .head-links{gap:14px}
+  .head-links .hide-sm{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none;transition:none}
+  .p-hero h1{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+<div class="bg-grid" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+
+<header class="site">
+  <div class="head-in">
+    <a class="brand" href="index.html"><em></em><span>Arnav Patil</span></a>
+    <nav class="head-links" aria-label="Page">
+      <a href="index.html">← HOME</a>
+      <a class="hide-sm" href="resume.html">RÉSUMÉ</a>
+      <a class="hide-sm" href="index.html#contact">CONTACT</a>
+      <a class="pill" href="index.html">HOME ↗</a>
+    </nav>
+  </div>
+</header>
+
+<!-- discipline app bar -->
+<nav class="disc-tabs" aria-label="Disciplines">
+  <div class="disc-tabs-in">
+    <span class="lbl">DISCIPLINES —</span>
+    <a href="graphic-design.html">01 · GRAPHIC DESIGN</a>
+    <a href="ui-ux.html">02 · UI / UX</a>
+    <a href="video-editing.html">03 · VIDEO EDITING</a>
+    <a href="3d-game-dev.html">04 · 3D &amp; GAME DEV</a>
+  </div>
+</nav>
+
+<main>
+  <section class="p-hero" aria-label="Work index">
+    <span class="orn" aria-hidden="true" data-py="55" style="top:20%;right:6%;color:var(--cyan)">⌖</span>
+    <div class="wrap">
+      <p class="sec-label rv"><i></i>WORK INDEX — 選択された作品</p>
+      <h1 class="rv">Selected <em>Disciplines</em></h1>
+      <p class="p-intro rv">Brand systems, interfaces, films and 3D — the complete body of work, organized by discipline.</p>
+    </div>
+  </section>
+
+  <div class="wm-wrap" aria-hidden="true"><span class="wm" data-scrub="110">ALL WORK — ALL WORK — ALL WORK</span></div>
+
+  <section class="stack-sec" aria-label="Disciplines">
+    <span class="orn" aria-hidden="true" data-py="-45" style="bottom:8%;left:4%;color:var(--red);font-size:22px">+</span>
+    <div class="wrap">
+      <div class="stack" id="workStack"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="foot-in">
+    <span id="footCopy">© 2026 ARNAV PATIL</span>
+    <a href="index.html">BACK TO HOME ↖</a>
+  </div>
+</footer>
+
+<script>
+/* ═══════════ DISCIPLINES DATA — EDIT HERE (mirror of index.html SITE.disciplines) ═══════════ */
+const DISCIPLINES = [
+  {
+    no: "01", title: "Graphic Design", tag: "IDENTITY · PACKAGING · SOCIAL",
+    blurb: "Brand identities, FMCG packaging, editorial and campaign creative — from full brand manuals for Fox Harvest and NERV to social systems for Kotak, SBI and STIHL.",
+    cover: "assets/thumbs/graphic-design.jpg",
+    count: "9 PROJECTS",
+    page: "graphic-design.html",
+  },
+  {
+    no: "02", title: "UI / UX Design", tag: "WEB · PRODUCT · KIOSK",
+    blurb: "A Kick Sauber F1 website concept, the live Parvv Banquets site, and a reimagined railway ATVM — two of them fully interactive right in the pop-ups.",
+    cover: "assets/thumbs/ui-ux.jpg",
+    count: "3 PROJECTS",
+    page: "ui-ux.html",
+  },
+  {
+    no: "03", title: "Video Editing", tag: "MOTION · EDIT · GEN-AI",
+    blurb: "Viral F1 edits plus concept films for Mahindra, Kotak and Equitas — After Effects craft blended with AI video generation.",
+    cover: "assets/thumbs/video-editing.jpg",
+    count: "5 PROJECTS",
+    page: "video-editing.html",
+  },
+  {
+    no: "04", title: "3D & Game Dev", tag: "BLENDER · MAYA · UNITY",
+    blurb: "3D models, animations and playable environments — Blender and Maya modelling alongside Unity level walkthroughs.",
+    cover: "assets/thumbs/3d-game-dev.jpg",
+    count: "4 PROJECTS",
+    page: "3d-game-dev.html",
+  },
+];
+/* ═══════════════ END OF DATA ═══════════════ */
+
+const esc = s => String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.getElementById('footCopy').textContent = `© ${new Date().getFullYear()} ARNAV PATIL`;
+
+document.getElementById('workStack').innerHTML = DISCIPLINES.map(d => `
+  <article class="work-card">
+    <div class="wc-info">
+      <p class="wc-no"><b>/${esc(d.no)}</b><span>${esc(d.count)}</span></p>
+      <h3>${esc(d.title)}</h3>
+      <p class="wc-tag">${esc(d.tag)}</p>
+      <p class="wc-blurb">${esc(d.blurb)}</p>
+    </div>
+    <a class="wc-cover" href="${esc(d.page)}" aria-label="Open ${esc(d.title)} projects">
+      ${/\.(png|jpe?g|webp|gif|mp4|webm)$/i.test(d.cover)
+        ? (/\.(mp4|webm)$/i.test(d.cover)
+            ? `<video src="${esc(d.cover)}" muted loop autoplay playsinline preload="metadata"></video>`
+            : `<img src="${esc(d.cover)}" alt="${esc(d.title)} cover" loading="lazy">`)
+        : `<p class="ph"><b>◳</b>[ ${esc(d.cover)} ]</p>`}
+      <span class="wc-open">VIEW PROJECTS ↗</span>
+    </a>
+  </article>`).join('');
+
+/* reveals */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), { threshold:.12, rootMargin:'0px 0px -6% 0px' });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+/* progress + watermark scrub + ornament drift + card stack scaling */
+const bar = document.getElementById('progressBar');
+const wm = document.querySelector('.wm');
+const orns = [...document.querySelectorAll('[data-py]')];
+const cards = [...document.querySelectorAll('.work-card')];
+let ticking = false;
+addEventListener('scroll', () => {
+  if (ticking) return; ticking = true;
+  requestAnimationFrame(() => {
+    const vh = innerHeight;
+    const max = document.documentElement.scrollHeight - vh;
+    bar.style.transform = `scaleX(${max > 0 ? scrollY/max : 0})`;
+    if (!RM){
+      const r = wm.parentElement.getBoundingClientRect();
+      const p = (vh - r.top)/(vh + r.height);
+      wm.style.transform = `translateX(${(p - .5) * 2 * +wm.dataset.scrub * -1}px)`;
+      orns.forEach(o => {
+        const pr = o.parentElement.getBoundingClientRect();
+        if (pr.bottom < -160 || pr.top > vh + 160) return;
+        const pp = (pr.top + pr.height/2 - vh/2) / vh;
+        o.style.transform = `translateY(${pp * +o.dataset.py}px)`;
+      });
+      const stickyTop = 64 + 70;
+      cards.forEach((c, i) => {
+        const next = cards[i+1];
+        if (!next){ c.style.transform=''; c.style.filter=''; return; }
+        const gap = next.getBoundingClientRect().top - stickyTop;
+        const p2 = Math.min(Math.max(1 - gap/(vh*.85), 0), 1);
+        c.style.transform = `scale(${1 - p2*.06})`;
+        c.style.filter = `brightness(${1 - p2*.35})`;
+      });
+    }
+    ticking = false;
+  });
+}, { passive:true });
+</script>
+</body>
+</html>

@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Railways ATVM – Mumbai</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1e2d4a;
+    --navy-light: #2a3d5e;
+    --red: #e8364f;
+    --red-hover: #cf2d43;
+    --blue-muted: #5a7fa0;
+    --text: #1e2d4a;
+    --text-light: #6b7a8d;
+    --bg: #f0f2f5;
+    --white: #ffffff;
+    --border: #dde2e9;
+    --step-done: #5a7fa0;
+    --green: #2ecc71;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 70px;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+  .logo-block { line-height: 1.2; }
+  .logo-block strong { font-size: 17px; font-weight: 700; letter-spacing: .3px; }
+  .logo-block span { font-size: 11.5px; opacity: .7; display: block; font-weight: 400; }
+
+  .lang-toggle { display: flex; gap: 6px; }
+  .lang-btn {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,.5);
+    color: white;
+    border-radius: 6px;
+    padding: 5px 14px;
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+    font-weight: 500;
+  }
+  .lang-btn.active { background: var(--red); border-color: var(--red); }
+  .lang-btn:hover:not(.active) { background: rgba(255,255,255,.1); }
+
+  .time-block { text-align: right; line-height: 1.3; }
+  .time-block .time { font-size: 22px; font-weight: 700; }
+  .time-block .loc { font-size: 12px; opacity: .7; }
+
+  /* ── STEPPER ── */
+  .stepper {
+    background: white;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    position: relative;
+  }
+  .step:not(:last-child)::after {
+    content: '';
+    flex: 1;
+    height: 1.5px;
+    background: var(--border);
+    margin: 0 10px;
+    transition: background .3s;
+  }
+  .step.done::after { background: var(--step-done); }
+  .step-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    color: var(--text-light);
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .step.active .step-num { background: var(--red); border-color: var(--red); color: white; }
+  .step.done .step-num { background: var(--step-done); border-color: var(--step-done); color: white; }
+  .step-label { font-size: 12.5px; font-weight: 500; color: var(--text-light); white-space: nowrap; }
+  .step.active .step-label { color: var(--text); font-weight: 600; }
+  .step.done .step-label { color: var(--step-done); }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    display: none;
+    padding: 28px;
+    animation: fadeIn .2s ease;
+  }
+  .screen.active { display: flex; flex-direction: column; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 46px;
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+  .help-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: .5px;
+  }
+
+  /* ═══════════════════════════════════
+     SCREEN 1 – WELCOME
+  ═══════════════════════════════════ */
+  #screen1 {
+    align-items: center;
+    justify-content: center;
+  }
+  .welcome-card {
+    background: var(--bg);
+    border-radius: 16px;
+    padding: 60px 48px;
+    text-align: center;
+    width: 100%;
+    max-width: 700px;
+  }
+  .welcome-card h1 { font-size: 44px; font-weight: 800; color: var(--navy); line-height: 1.1; }
+  .welcome-card h2 { font-size: 28px; font-weight: 700; color: var(--navy); margin: 24px 0 20px; }
+  .btn-primary {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 12px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 24px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-primary:hover { background: var(--red-hover); }
+  .btn-secondary {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-secondary:hover { background: rgba(30,45,74,.07); }
+
+  /* ═══════════════════════════════════
+     SCREEN 2 – LOCATION
+  ═══════════════════════════════════ */
+  .view-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .vtbtn {
+    flex: 1;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .vtbtn.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+  .search-bar {
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .search-bar input {
+    width: 100%;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 44px 13px 16px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s;
+  }
+  .search-bar input:focus { border-color: var(--navy); }
+  .search-bar .ico {
+    position: absolute;
+    right: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 18px;
+  }
+
+  .station-list {
+    background: white;
+    border-radius: 12px;
+    overflow-y: auto;
+    flex: 1;
+    border: 1px solid var(--border);
+  }
+  .station-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--bg);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background .1s;
+    font-weight: 500;
+  }
+  .station-item:last-child { border-bottom: none; }
+  .station-item:hover { background: #f5f7fa; }
+  .station-item .line-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .line-w { background: #e8f5e9; color: #2e7d32; }
+  .line-c { background: #fff3e0; color: #e65100; }
+  .line-h { background: #e3f2fd; color: #1565c0; }
+
+  /* MAP VIEW */
+  #map-container {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border);
+    cursor: grab;
+    display: none;
+  }
+  #map-container.active { display: block; }
+  #map-container:active { cursor: grabbing; }
+  #map-svg {
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    user-select: none;
+  }
+  .map-instructions {
+    position: absolute;
+    bottom: 12px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30,45,74,.75);
+    color: white;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    pointer-events: none;
+  }
+  .zoom-controls {
+    position: absolute;
+    top: 12px; right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .zoom-btn {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    width: 32px; height: 32px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--navy);
+  }
+  .zoom-btn:hover { background: var(--bg); }
+
+  /* ═══════════════════════════════════
+     SCREEN 3 – JOURNEY
+  ═══════════════════════════════════ */
+  .journey-header {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    margin-bottom: 18px;
+    flex-shrink: 0;
+  }
+  .journey-header .route { display: flex; gap: 8px; align-items: center; font-size: 15px; }
+  .journey-header .route strong { font-weight: 700; }
+  .journey-header .route .to { color: var(--red); font-weight: 700; }
+  .nav-btns { display: flex; gap: 10px; }
+  .btn-back {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,.5);
+    color: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-back:hover { background: rgba(255,255,255,.1); }
+  .btn-next {
+    background: var(--red);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-next:hover { background: var(--red-hover); }
+
+  .journey-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    flex: 1;
+  }
+  .jcard {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid var(--border);
+  }
+  .jcard h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 14px;
+    background: var(--navy);
+    color: white;
+    margin: -18px -18px 16px;
+    padding: 10px 18px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .qty-row:last-child { margin-bottom: 0; }
+  .qty-label { font-size: 15px; font-weight: 500; }
+  .qty-ctrl { display: flex; gap: 6px; align-items: center; }
+  .qty-btn {
+    width: 32px; height: 32px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--red);
+    transition: background .1s;
+  }
+  .qty-btn:hover { background: #fdf0f2; }
+  .qty-val {
+    width: 38px; height: 32px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    text-align: center;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    background: white;
+  }
+
+  .option-btn {
+    display: block;
+    width: 100%;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: all .15s;
+    text-align: center;
+  }
+  .option-btn:last-child { margin-bottom: 0; }
+  .option-btn.selected { background: var(--red); color: white; border-color: var(--red); }
+  .option-btn:hover:not(.selected) { background: #f5f7fa; }
+
+  .option-row { display: flex; gap: 8px; }
+  .option-row .option-btn { flex: 1; margin-bottom: 0; }
+
+  /* ═══════════════════════════════════
+     SCREEN 4 – PAYMENT
+  ═══════════════════════════════════ */
+  .payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    flex: 1;
+  }
+  .payment-panel {
+    background: var(--navy);
+    color: white;
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .payment-panel h3 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+  .pay-method {
+    background: rgba(255,255,255,.08);
+    border: 1.5px solid rgba(255,255,255,.2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .pay-method:last-of-type { margin-bottom: 0; }
+  .pay-method.selected { background: rgba(232,54,79,.25); border-color: var(--red); }
+  .pay-method:hover:not(.selected) { background: rgba(255,255,255,.13); }
+  .pay-method .pm-label { font-size: 15px; font-weight: 600; }
+  .pay-method .pm-sub { font-size: 12px; opacity: .7; }
+  .pm-logos { display: flex; gap: 6px; align-items: center; }
+  .pm-logo { height: 20px; border-radius: 3px; object-fit: contain; }
+  .pm-logo-text { font-size: 11px; font-weight: 700; padding: 3px 6px; border-radius: 4px; }
+  .pm-phonepe { background: #5f2d91; color: white; }
+  .pm-gpay { background: white; color: #1a73e8; }
+  .pm-paytm { background: #002970; color: #00baf2; }
+
+  .upi-input {
+    margin-top: 12px;
+    background: rgba(255,255,255,.08);
+    border: 1.5px solid rgba(255,255,255,.2);
+    border-radius: 8px;
+    padding: 11px 14px;
+    width: 100%;
+    font-family: inherit;
+    font-size: 13px;
+    color: white;
+    outline: none;
+  }
+  .upi-input::placeholder { color: rgba(255,255,255,.4); }
+  .upi-input:focus { border-color: rgba(255,255,255,.5); }
+
+  .order-summary {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .order-summary h3 { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 10px;
+  }
+  .summary-divider { height: 1px; background: var(--border); margin: 12px 0; }
+  .summary-total { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 18px; }
+  .btn-confirm {
+    width: 100%;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s;
+    margin-bottom: 10px;
+  }
+  .btn-confirm:hover { background: var(--red-hover); }
+  .btn-back-white {
+    width: 100%;
+    background: white;
+    color: var(--navy);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+    margin-top: auto;
+  }
+  .btn-back-white:hover { background: var(--bg); }
+
+  /* ═══════════════════════════════════
+     SCREEN 5 – TICKET
+  ═══════════════════════════════════ */
+  .ticket-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 16px;
+    flex: 1;
+  }
+  .ticket-card {
+    background: var(--navy);
+    color: white;
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .ticket-label { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; opacity: .6; text-transform: uppercase; margin-bottom: 6px; }
+  .ticket-id { font-size: 28px; font-weight: 800; letter-spacing: 2px; margin-bottom: 20px; }
+  .ticket-route { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .ticket-stn { font-size: 22px; font-weight: 800; }
+  .ticket-dots { flex: 1; border-top: 2px dashed rgba(255,255,255,.3); position: relative; }
+  .ticket-dot-mid {
+    width: 10px; height: 10px;
+    background: var(--red);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .ticket-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+  .ticket-meta-item label { font-size: 10px; opacity: .6; display: block; margin-bottom: 2px; }
+  .ticket-meta-item span { font-size: 14px; font-weight: 600; }
+  .ticket-bar {
+    background: rgba(255,255,255,.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    margin-bottom: 12px;
+  }
+  .ticket-bar span { opacity: .5; }
+  .ticket-note { font-size: 11px; opacity: .5; font-style: italic; }
+
+  /* Platform card */
+  .platform-card {
+    background: var(--navy-light);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    text-align: center;
+    color: white;
+  }
+  .platform-card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .platform-num {
+    font-size: 100px;
+    font-weight: 900;
+    color: var(--red);
+    line-height: 1;
+    margin: 4px 0 8px;
+  }
+  .platform-direction { font-size: 13px; opacity: .7; }
+  .platform-station { font-size: 12px; opacity: .4; margin-top: 12px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  /* QR card */
+  .qr-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+  }
+  .qr-card h3 { font-size: 16px; font-weight: 700; color: var(--red); margin-bottom: 12px; }
+  #qr-code { flex: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+  #qr-code canvas, #qr-code img { border-radius: 6px; max-width: 100%; }
+  .qr-note { font-size: 11px; color: var(--text-light); text-align: center; margin-bottom: 6px; }
+  .qr-once { font-size: 10px; font-weight: 700; color: var(--navy); letter-spacing: 1px; text-align: center; margin-bottom: 14px; }
+  .btn-done {
+    width: 100%;
+    background: white;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    border-radius: 10px;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: auto;
+    transition: all .15s;
+  }
+  .btn-done:hover { background: var(--navy); color: white; }
+
+  /* ═══════════════════════════════════
+     SCREEN 6 – THANK YOU
+  ═══════════════════════════════════ */
+  #screen6 {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: white;
+  }
+  #screen6 h1 { font-size: 52px; font-weight: 800; color: var(--navy); }
+  #screen6 p { font-size: 20px; color: var(--text-light); margin: 10px 0 32px; font-weight: 500; }
+  .btn-new {
+    background: white;
+    color: var(--navy);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 40px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-new:hover { background: var(--navy); color: white; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-block">
+    <strong>Indian Railways</strong>
+    <span data-i18n="subtitle">Automated Ticket Vending Machine</span>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('hi')">हि</button>
+    <button class="lang-btn" onclick="setLang('mr')">म</button>
+  </div>
+  <div class="time-block">
+    <div class="time" id="clock">--:-- --</div>
+    <div class="loc">📍 Mumbai - CSMT</div>
+  </div>
+</header>
+
+<!-- STEPPER -->
+<nav class="stepper" id="stepper">
+  <div class="step active" id="step1"><div class="step-num">1</div><div class="step-label" data-i18n="s_start">Start</div></div>
+  <div class="step" id="step2"><div class="step-num">2</div><div class="step-label" data-i18n="s_location">Location</div></div>
+  <div class="step" id="step3"><div class="step-num">3</div><div class="step-label" data-i18n="s_journey">Journey</div></div>
+  <div class="step" id="step4"><div class="step-num">4</div><div class="step-label" data-i18n="s_payment">Payment</div></div>
+  <div class="step" id="step5"><div class="step-num">5</div><div class="step-label" data-i18n="s_platform">Platform</div></div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+  <!-- SCREEN 1: WELCOME -->
+  <section class="screen active" id="screen1">
+    <div class="welcome-card">
+      <h1 data-i18n="welcome">Welcome to Mumbai Railway</h1>
+      <h2 data-i18n="book_ticket">Book Ticket</h2>
+      <button class="btn-primary" onclick="goToScreen(2,'map')" data-i18n="using_map">Using Map</button>
+      <button class="btn-secondary" onclick="goToScreen(2,'list')" data-i18n="fast_booking">Fast Booking</button>
+    </div>
+  </section>
+
+  <!-- SCREEN 2: LOCATION -->
+  <section class="screen" id="screen2" style="gap:0">
+    <div class="view-toggle">
+      <button class="vtbtn active" id="vtList" onclick="switchView('list')" data-i18n="list_view">☰ List View</button>
+      <button class="vtbtn" id="vtMap" onclick="switchView('map')" data-i18n="map_view">🗺 Map View</button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search station…" oninput="filterStations()" data-i18n-ph="search_ph">
+      <span class="ico">🔍</span>
+    </div>
+
+    <!-- List -->
+    <div class="station-list" id="stationList"></div>
+
+    <!-- Map -->
+    <div id="map-container">
+      <svg id="map-svg" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="zoom-controls">
+        <button class="zoom-btn" onclick="zoomMap(1.25)">+</button>
+        <button class="zoom-btn" onclick="zoomMap(0.8)">−</button>
+      </div>
+      <div class="map-instructions">Drag to pan · Pinch or buttons to zoom · Tap station to select</div>
+    </div>
+  </section>
+
+  <!-- SCREEN 3: JOURNEY -->
+  <section class="screen" id="screen3">
+    <div class="journey-header">
+      <div class="route">
+        <span data-i18n="from">From:</span> <strong>Mumbai CSMT</strong>
+        &nbsp;&nbsp;
+        <span data-i18n="to">To:</span> <strong class="to" id="toStation">—</strong>
+      </div>
+      <div class="nav-btns">
+        <button class="btn-back" onclick="goToScreen(2,'list')" data-i18n="back">← Back</button>
+        <button class="btn-next" onclick="goToScreen(4)" data-i18n="next">Next →</button>
+      </div>
+    </div>
+    <div class="journey-grid">
+      <!-- Quantity -->
+      <div class="jcard">
+        <h3 data-i18n="quantity">Quantity</h3>
+        <div class="qty-row">
+          <span class="qty-label" data-i18n="adult">Adult</span>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty('adult',-1)">−</button>
+            <input class="qty-val" id="adultQty" type="text" value="01" readonly>
+            <button class="qty-btn" onclick="changeQty('adult',1)">+</button>
+          </div>
+        </div>
+        <div class="qty-row">
+          <span class="qty-label" data-i18n="child">Child</span>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty('child',-1)">−</button>
+            <input class="qty-val" id="childQty" type="text" value="00" readonly>
+            <button class="qty-btn" onclick="changeQty('child',1)">+</button>
+          </div>
+        </div>
+        <div style="height:16px"></div>
+        <h3 data-i18n="journey_type">Journey Type</h3>
+        <button class="option-btn selected" id="jt_single" onclick="selectOption('journeyType','single',this)" data-i18n="single">Single</button>
+        <button class="option-btn" id="jt_return" onclick="selectOption('journeyType','return',this)" data-i18n="return">Return</button>
+      </div>
+      <!-- Class & Train Type -->
+      <div class="jcard">
+        <h3 data-i18n="class">Class</h3>
+        <button class="option-btn selected" id="cl_first" onclick="selectOption('class','First Class',this)" data-i18n="first_class">First Class</button>
+        <button class="option-btn" id="cl_second" onclick="selectOption('class','Second Class',this)" data-i18n="second_class">Second Class</button>
+        <button class="option-btn" id="cl_ac" onclick="selectOption('class','AC',this)">AC</button>
+        <div style="height:14px"></div>
+        <h3 data-i18n="train_type">Train Type</h3>
+        <div class="option-row">
+          <button class="option-btn selected" onclick="selectOption('trainType','Local',this)" data-i18n="local">Local</button>
+          <button class="option-btn" onclick="selectOption('trainType','Express',this)" data-i18n="express">Express</button>
+          <button class="option-btn" onclick="selectOption('trainType','AC EMU',this)">AC EMU</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 4: PAYMENT -->
+  <section class="screen" id="screen4">
+    <div class="payment-grid">
+      <div class="payment-panel">
+        <h3 data-i18n="payment">Payment</h3>
+        <div class="pay-method selected" onclick="selectPayMethod(this,'upi')">
+          <div>
+            <div class="pm-label">UPI / QR</div>
+          </div>
+          <div class="pm-logos">
+            <span class="pm-logo-text pm-phonepe">₱</span>
+            <span class="pm-logo-text pm-gpay">G</span>
+            <span class="pm-logo-text pm-paytm">P</span>
+          </div>
+        </div>
+        <div class="pay-method" onclick="selectPayMethod(this,'card')">
+          <div class="pm-label" data-i18n="card">Card</div>
+          <div class="pm-sub" data-i18n="card_sub">Debit / Credit / Prepaid</div>
+        </div>
+        <div class="pay-method" onclick="selectPayMethod(this,'cash')">
+          <div class="pm-label" data-i18n="cash">Cash</div>
+          <div class="pm-sub" data-i18n="cash_sub">Insert Notes or Coins</div>
+        </div>
+        <input class="upi-input" type="text" placeholder="Enter UPI ID (e.g. name@upi)" data-i18n-ph="upi_ph">
+      </div>
+      <div class="order-summary">
+        <h3 data-i18n="order_summary">Order Summary</h3>
+        <div class="summary-row"><span id="sum_route">Mumbai CSMT → —</span></div>
+        <div class="summary-row"><span id="sum_class">First Class • Local</span></div>
+        <div class="summary-row"><span id="sum_journey">Single</span></div>
+        <div class="summary-row"><span id="sum_pax">1 Adult</span></div>
+        <div class="summary-divider"></div>
+        <div class="summary-total"><span data-i18n="total">Total</span><span id="sum_total">₹0.00</span></div>
+        <button class="btn-confirm" onclick="confirmPayment()" data-i18n="confirm_pay">Confirm and Pay</button>
+        <button class="btn-back-white" onclick="goToScreen(3)" data-i18n="back">← Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 5: TICKET -->
+  <section class="screen" id="screen5">
+    <div class="ticket-grid">
+      <!-- Ticket -->
+      <div class="ticket-card">
+        <div class="ticket-label" data-i18n="journey_ticket">Journey Ticket</div>
+        <div class="ticket-id" id="tkt_id">—</div>
+        <div class="ticket-route">
+          <div class="ticket-stn" id="tkt_from">CSMT</div>
+          <div class="ticket-dots"><div class="ticket-dot-mid"></div></div>
+          <div class="ticket-stn" id="tkt_to">—</div>
+        </div>
+        <div class="ticket-meta">
+          <div class="ticket-meta-item"><label data-i18n="passenger">Passenger</label><span id="tkt_pax">1 Adult</span></div>
+          <div class="ticket-meta-item"><label data-i18n="distance">Distance</label><span id="tkt_dist">— km</span></div>
+          <div class="ticket-meta-item"><label data-i18n="booked_on">Booked On</label><span id="tkt_booked">—</span></div>
+          <div class="ticket-meta-item"><label data-i18n="valid_till">Valid Till</label><span id="tkt_valid">—</span></div>
+        </div>
+        <div class="ticket-bar">
+          <span id="tkt_class_bar">FIRST</span> | <span id="tkt_jtype_bar">ORDINARY</span> | <span id="tkt_jt_bar">JOURNEY</span> | <span id="tkt_fare">₹0.00</span>
+        </div>
+        <div class="ticket-note">*Valid for start of journey within 1 hour or until departure of first train.</div>
+      </div>
+      <!-- Platform -->
+      <div class="platform-card">
+        <h3 data-i18n="your_platform">Your Platform</h3>
+        <div class="platform-num" id="platNum">3</div>
+        <div class="platform-direction" data-i18n="platform_dir">Head Left from this ATVM towards the stairs</div>
+        <div class="platform-station">MUMBAI CSMT</div>
+      </div>
+      <!-- QR -->
+      <div class="qr-card">
+        <h3 data-i18n="digital_ticket">Digital Ticket</h3>
+        <div id="qr-code"></div>
+        <div class="qr-note" data-i18n="qr_note">Scan this QR code in the Rail One app to add it to your bookings</div>
+        <div class="qr-once" data-i18n="qr_once">ONE TIME USE ONLY</div>
+        <button class="btn-done" onclick="goToScreen(6)" data-i18n="done">Done</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREEN 6: THANK YOU -->
+  <section class="screen" id="screen6">
+    <h1 data-i18n="thank_you">Thank You</h1>
+    <p data-i18n="safe_journey">Have a safe journey ahead!</p>
+    <button class="btn-new" onclick="resetApp()" data-i18n="new_ticket">New Ticket</button>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <span data-i18n="help_text">Need help? Press the button or call station staff on platform.</span>
+  <button class="help-btn" data-i18n="help">HELP</button>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+const state = {
+  selectedStation: '',
+  adults: 1,
+  children: 0,
+  journeyType: 'single',
+  ticketClass: 'First Class',
+  trainType: 'Local',
+  payMethod: 'upi',
+  ticketId: '',
+  fare: 0,
+};
+
+/* ══════════════════════════════════════════
+   I18N
+══════════════════════════════════════════ */
+const translations = {
+  en: {
+    subtitle: 'Automated Ticket Vending Machine',
+    s_start: 'Start', s_location: 'Location', s_journey: 'Journey', s_payment: 'Payment', s_platform: 'Platform',
+    welcome: 'Welcome to Mumbai Railway', book_ticket: 'Book Ticket',
+    using_map: 'Using Map', fast_booking: 'Fast Booking',
+    list_view: '☰ List View', map_view: '🗺 Map View',
+    search_ph: 'Search station…',
+    from: 'From:', to: 'To:',
+    back: '← Back', next: 'Next →',
+    quantity: 'Quantity', adult: 'Adult', child: 'Child',
+    journey_type: 'Journey Type', single: 'Single', return: 'Return',
+    class: 'Class', first_class: 'First Class', second_class: 'Second Class',
+    train_type: 'Train Type', local: 'Local', express: 'Express',
+    payment: 'Payment', card: 'Card', card_sub: 'Debit / Credit / Prepaid',
+    cash: 'Cash', cash_sub: 'Insert Notes or Coins', upi_ph: 'Enter UPI ID (e.g. name@upi)',
+    order_summary: 'Order Summary', total: 'Total', confirm_pay: 'Confirm and Pay',
+    journey_ticket: 'JOURNEY TICKET', passenger: 'Passenger', distance: 'Distance',
+    booked_on: 'Booked On', valid_till: 'Valid Till',
+    your_platform: 'Your Platform', platform_dir: 'Head Left from this ATVM towards the stairs',
+    digital_ticket: 'Digital Ticket', qr_note: 'Scan this QR code in the Rail One app to add it to your bookings',
+    qr_once: 'ONE TIME USE ONLY', done: 'Done',
+    thank_you: 'Thank You', safe_journey: 'Have a safe journey ahead!', new_ticket: 'New Ticket',
+    help_text: 'Need help? Press the button or call station staff on platform.', help: 'HELP',
+  },
+  hi: {
+    subtitle: 'स्वचालित टिकट वेंडिंग मशीन',
+    s_start: 'शुरू', s_location: 'स्थान', s_journey: 'यात्रा', s_payment: 'भुगतान', s_platform: 'प्लेटफॉर्म',
+    welcome: 'मुंबई रेलवे में आपका स्वागत है', book_ticket: 'टिकट बुक करें',
+    using_map: 'मानचित्र से', fast_booking: 'त्वरित बुकिंग',
+    list_view: '☰ सूची दृश्य', map_view: '🗺 मानचित्र दृश्य',
+    search_ph: 'स्टेशन खोजें…',
+    from: 'से:', to: 'तक:',
+    back: '← वापस', next: 'आगे →',
+    quantity: 'संख्या', adult: 'वयस्क', child: 'बच्चा',
+    journey_type: 'यात्रा प्रकार', single: 'एकतरफा', return: 'वापसी',
+    class: 'श्रेणी', first_class: 'प्रथम श्रेणी', second_class: 'द्वितीय श्रेणी',
+    train_type: 'ट्रेन प्रकार', local: 'लोकल', express: 'एक्सप्रेस',
+    payment: 'भुगतान', card: 'कार्ड', card_sub: 'डेबिट / क्रेडिट / प्रीपेड',
+    cash: 'नकद', cash_sub: 'नोट या सिक्के डालें', upi_ph: 'UPI ID दर्ज करें (name@upi)',
+    order_summary: 'ऑर्डर सारांश', total: 'कुल', confirm_pay: 'भुगतान करें',
+    journey_ticket: 'यात्रा टिकट', passenger: 'यात्री', distance: 'दूरी',
+    booked_on: 'बुकिंग तिथि', valid_till: 'वैध तक',
+    your_platform: 'आपका प्लेटफॉर्म', platform_dir: 'इस ATVM से बाईं ओर सीढ़ियों की ओर जाएं',
+    digital_ticket: 'डिजिटल टिकट', qr_note: 'Rail One ऐप में QR कोड स्कैन करें',
+    qr_once: 'केवल एक बार उपयोग', done: 'हो गया',
+    thank_you: 'धन्यवाद', safe_journey: 'सुरक्षित यात्रा करें!', new_ticket: 'नया टिकट',
+    help_text: 'सहायता चाहिए? बटन दबाएं या स्टाफ को बुलाएं।', help: 'सहायता',
+  },
+  mr: {
+    subtitle: 'स्वयंचलित तिकीट विक्री यंत्र',
+    s_start: 'सुरुवात', s_location: 'स्थान', s_journey: 'प्रवास', s_payment: 'पेमेंट', s_platform: 'प्लॅटफॉर्म',
+    welcome: 'मुंबई रेल्वेत आपले स्वागत', book_ticket: 'तिकीट बुक करा',
+    using_map: 'नकाशा वापरून', fast_booking: 'जलद बुकिंग',
+    list_view: '☰ यादी दृश्य', map_view: '🗺 नकाशा दृश्य',
+    search_ph: 'स्टेशन शोधा…',
+    from: 'पासून:', to: 'पर्यंत:',
+    back: '← मागे', next: 'पुढे →',
+    quantity: 'संख्या', adult: 'प्रौढ', child: 'मुल',
+    journey_type: 'प्रवास प्रकार', single: 'एकेरी', return: 'परतीचे',
+    class: 'वर्ग', first_class: 'प्रथम वर्ग', second_class: 'द्वितीय वर्ग',
+    train_type: 'गाडी प्रकार', local: 'लोकल', express: 'एक्सप्रेस',
+    payment: 'पेमेंट', card: 'कार्ड', card_sub: 'डेबिट / क्रेडिट / प्रीपेड',
+    cash: 'रोख', cash_sub: 'नोटा किंवा नाणी टाका', upi_ph: 'UPI ID टाका (name@upi)',
+    order_summary: 'ऑर्डर सारांश', total: 'एकूण', confirm_pay: 'पेमेंट करा',
+    journey_ticket: 'प्रवास तिकीट', passenger: 'प्रवासी', distance: 'अंतर',
+    booked_on: 'बुकिंग तारीख', valid_till: 'वैध पर्यंत',
+    your_platform: 'तुमचा प्लॅटफॉर्म', platform_dir: 'या ATVM पासून डाव्या बाजूने जिन्याकडे जा',
+    digital_ticket: 'डिजिटल तिकीट', qr_note: 'Rail One अॅपमध्ये QR कोड स्कॅन करा',
+    qr_once: 'फक्त एकदाच वापरा', done: 'झाले',
+    thank_you: 'धन्यवाद', safe_journey: 'सुरक्षित प्रवास करा!', new_ticket: 'नवीन तिकीट',
+    help_text: 'मदत हवी? बटण दाबा किंवा स्टाफला बोलवा.', help: 'मदत',
+  }
+};
+let currentLang = 'en';
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  applyTranslations();
+}
+function applyTranslations() {
+  const t = translations[currentLang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    if (t[key]) el.placeholder = t[key];
+  });
+}
+
+/* ══════════════════════════════════════════
+   CLOCK
+══════════════════════════════════════════ */
+function updateClock() {
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes();
+  const ampm = h >= 12 ? 'pm' : 'am';
+  h = h % 12 || 12;
+  document.getElementById('clock').textContent = `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+updateClock();
+setInterval(updateClock, 10000);
+
+/* ══════════════════════════════════════════
+   STATION DATA
+══════════════════════════════════════════ */
+const stations = [
+  // Western
+  {name:'Churchgate',line:'w',dist:54},{name:'Marine Lines',line:'w',dist:52},{name:'Charni Road',line:'w',dist:51},
+  {name:'Grant Road',line:'w',dist:49},{name:'Mumbai Central',line:'w',dist:46},{name:'Mahalaxmi',line:'w',dist:44},
+  {name:'Lower Parel',line:'w',dist:42},{name:'Elphinstone Road',line:'w',dist:40},{name:'Dadar',line:'w',dist:37},
+  {name:'Matunga Road',line:'w',dist:35},{name:'Mahim',line:'w',dist:33},{name:'Bandra',line:'w',dist:29},
+  {name:'Khar Road',line:'w',dist:26},{name:'Santacruz',line:'w',dist:23},{name:'Vile Parle',line:'w',dist:20},
+  {name:'Andheri',line:'w',dist:17},{name:'Jogeshwari',line:'w',dist:14},{name:'Ram Mandir',line:'w',dist:12},
+  {name:'Goregaon',line:'w',dist:10},{name:'Malad',line:'w',dist:8},{name:'Kandivali',line:'w',dist:6},
+  {name:'Borivali',line:'w',dist:4},{name:'Dahisar',line:'w',dist:2},{name:'Mira Road',line:'w',dist:7},
+  {name:'Bhayandar',line:'w',dist:12},
+  // Central
+  {name:'Chhatrapati Shivaji Maharaj Terminus (CSMT)',line:'c',dist:0},{name:'Masjid Bunder',line:'c',dist:2},
+  {name:'Sandhurst Road',line:'c',dist:4},{name:'Byculla',line:'c',dist:6},{name:'Chinchpokli',line:'c',dist:8},
+  {name:'Currey Road',line:'c',dist:10},{name:'Parel',line:'c',dist:12},{name:'Dadar',line:'c',dist:14},
+  {name:'Matunga',line:'c',dist:16},{name:'Sion',line:'c',dist:18},{name:'Kurla',line:'c',dist:21},
+  {name:'Vidyavihar',line:'c',dist:23},{name:'Ghatkopar',line:'c',dist:25},{name:'Vikhroli',line:'c',dist:28},
+  {name:'Kanjurmarg',line:'c',dist:31},{name:'Bhandup',line:'c',dist:33},{name:'Nahur',line:'c',dist:35},
+  {name:'Mulund',line:'c',dist:38},{name:'Thane',line:'c',dist:42},{name:'Kalwa',line:'c',dist:44},
+  {name:'Mumbra',line:'c',dist:47},{name:'Diva Junction',line:'c',dist:50},{name:'Kopar',line:'c',dist:53},
+  {name:'Dombivli',line:'c',dist:56},{name:'Thakurli',line:'c',dist:58},{name:'Kalyan',line:'c',dist:62},
+  {name:'Vithalwadi',line:'c',dist:65},{name:'Ulhasnagar',line:'c',dist:68},{name:'Ambernath',line:'c',dist:72},
+  {name:'Badlapur',line:'c',dist:76},
+  // Harbour
+  {name:'Dockyard Road',line:'h',dist:4},{name:'Reay Road',line:'h',dist:6},{name:'Cotton Green',line:'h',dist:8},
+  {name:'Sewri',line:'h',dist:10},{name:'Wadala Road',line:'h',dist:14},{name:'Guru Tegh Bahadur Nagar',line:'h',dist:17},
+  {name:'Chunabhatti',line:'h',dist:19},{name:'Tilak Nagar',line:'h',dist:25},{name:'Chembur',line:'h',dist:27},
+  {name:'Govandi',line:'h',dist:29},{name:'Mankhurd',line:'h',dist:32},
+];
+// Unique sorted
+const uniqueStations = [...new Map(stations.map(s=>[s.name,s])).values()]
+  .sort((a,b)=>a.name.localeCompare(b.name));
+
+const lineName = {w:'Western',c:'Central',h:'Harbour'};
+
+/* ══════════════════════════════════════════
+   LIST VIEW
+══════════════════════════════════════════ */
+function renderList(filter='') {
+  const el = document.getElementById('stationList');
+  const f = filter.toLowerCase();
+  const filtered = uniqueStations.filter(s => s.name.toLowerCase().includes(f));
+  el.innerHTML = filtered.map(s => `
+    <div class="station-item" onclick="selectStation('${s.name.replace(/'/g,"\\'")}')">
+      ${s.name}
+      <span class="line-badge line-${s.line}">${lineName[s.line]}</span>
+    </div>`).join('');
+}
+renderList();
+function filterStations() {
+  renderList(document.getElementById('searchInput').value);
+}
+
+/* ══════════════════════════════════════════
+   MAP VIEW
+══════════════════════════════════════════ */
+const mapStations = [
+  // Western line (vertical, left side) – x~160, top->bottom = south to north
+  {name:'Churchgate',x:160,y:700,line:'w'},{name:'Marine Lines',x:160,y:670,line:'w'},
+  {name:'Charni Road',x:160,y:645,line:'w'},{name:'Grant Road',x:160,y:618,line:'w'},
+  {name:'Mumbai Central',x:160,y:590,line:'w'},{name:'Mahalaxmi',x:160,y:562,line:'w'},
+  {name:'Lower Parel',x:160,y:534,line:'w'},{name:'Elphinstone Road',x:160,y:506,line:'w'},
+  {name:'Dadar',x:180,y:475,line:'w'},{name:'Matunga Road',x:160,y:448,line:'w'},
+  {name:'Mahim',x:155,y:420,line:'w'},{name:'Bandra',x:148,y:392,line:'w'},
+  {name:'Khar Road',x:148,y:364,line:'w'},{name:'Santacruz',x:148,y:336,line:'w'},
+  {name:'Vile Parle',x:148,y:308,line:'w'},{name:'Andheri',x:148,y:280,line:'w'},
+  {name:'Jogeshwari',x:148,y:252,line:'w'},{name:'Ram Mandir',x:148,y:224,line:'w'},
+  {name:'Goregaon',x:148,y:196,line:'w'},{name:'Malad',x:148,y:168,line:'w'},
+  {name:'Kandivali',x:148,y:140,line:'w'},{name:'Borivali',x:148,y:112,line:'w'},
+  {name:'Dahisar',x:148,y:84,line:'w'},{name:'Mira Road',x:148,y:56,line:'w'},
+  {name:'Bhayandar',x:148,y:28,line:'w'},
+  // Central line
+  {name:'Chhatrapati Shivaji Maharaj Terminus (CSMT)',x:310,y:700,line:'c'},
+  {name:'Masjid Bunder',x:310,y:675,line:'c'},{name:'Sandhurst Road',x:310,y:648,line:'c'},
+  {name:'Byculla',x:310,y:620,line:'c'},{name:'Chinchpokoli',x:310,y:592,line:'c'},
+  {name:'Currey Road',x:310,y:564,line:'c'},{name:'Parel',x:310,y:536,line:'c'},
+  {name:'Dadar',x:310,y:508,line:'c'},{name:'Matunga',x:310,y:480,line:'c'},
+  {name:'Sion',x:310,y:452,line:'c'},{name:'Kurla',x:350,y:420,line:'c'},
+  {name:'Vidyavihar',x:400,y:396,line:'c'},{name:'Ghatkopar',x:450,y:374,line:'c'},
+  {name:'Vikhroli',x:500,y:352,line:'c'},{name:'Kanjurmarg',x:550,y:328,line:'c'},
+  {name:'Bhandup',x:600,y:304,line:'c'},{name:'Nahur',x:640,y:284,line:'c'},
+  {name:'Mulund',x:680,y:264,line:'c'},{name:'Thane',x:720,y:240,line:'c'},
+  {name:'Kalwa',x:760,y:220,line:'c'},{name:'Mumbra',x:800,y:200,line:'c'},
+  {name:'Diva Junction',x:840,y:180,line:'c'},{name:'Kopar',x:870,y:164,line:'c'},
+  {name:'Dombivli',x:900,y:148,line:'c'},{name:'Thakurli',x:925,y:132,line:'c'},
+  {name:'Kalyan',x:950,y:116,line:'c'},{name:'Vithalwadi',x:970,y:100,line:'c'},
+  {name:'Ulhasnagar',x:985,y:84,line:'c'},{name:'Ambernath',x:990,y:60,line:'c'},
+  {name:'Badlapur',x:990,y:36,line:'c'},
+  // Harbour
+  {name:'Dockyard Road',x:340,y:660,line:'h'},{name:'Reay Road',x:370,y:640,line:'h'},
+  {name:'Cotton Green',x:400,y:618,line:'h'},{name:'Sewri',x:430,y:596,line:'h'},
+  {name:'Wadala Road',x:460,y:570,line:'h'},{name:'Guru Tegh Bahadur Nagar',x:490,y:546,line:'h'},
+  {name:'Chunabhatti',x:500,y:516,line:'h'},{name:'Tilak Nagar',x:520,y:478,line:'h'},
+  {name:'Chembur',x:540,y:452,line:'h'},{name:'Govandi',x:570,y:430,line:'h'},
+  {name:'Mankhurd',x:600,y:410,line:'h'},
+];
+
+const lineColors = {w:'#2ecc71',c:'#e8364f',h:'#3498db'};
+
+function buildMap() {
+  const svg = document.getElementById('map-svg');
+  // Background
+  svg.innerHTML = `<rect width="1000" height="800" fill="#eef0f4"/>`;
+  // Draw lines
+  const lineGroups = {w:[],c:[],h:[]};
+  mapStations.forEach(s => lineGroups[s.line].push(s));
+
+  ['w','c','h'].forEach(line => {
+    const pts = lineGroups[line];
+    const path = pts.map((p,i) => (i===0?`M ${p.x} ${p.y}`:`L ${p.x} ${p.y}`)).join(' ');
+    const lineEl = document.createElementNS('http://www.w3.org/2000/svg','path');
+    lineEl.setAttribute('d',path);
+    lineEl.setAttribute('stroke',lineColors[line]);
+    lineEl.setAttribute('stroke-width','5');
+    lineEl.setAttribute('fill','none');
+    lineEl.setAttribute('stroke-linejoin','round');
+    svg.appendChild(lineEl);
+  });
+
+  // Draw nodes & labels
+  mapStations.forEach(s => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.setAttribute('class','map-stn');
+    g.style.cursor = 'pointer';
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx',s.x); circle.setAttribute('cy',s.y);
+    circle.setAttribute('r','6');
+    circle.setAttribute('fill','white');
+    circle.setAttribute('stroke',lineColors[s.line]);
+    circle.setAttribute('stroke-width','2.5');
+
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x',s.x+9); text.setAttribute('y',s.y+4);
+    text.setAttribute('font-size','9');
+    text.setAttribute('font-family','DM Sans, sans-serif');
+    text.setAttribute('fill','#1e2d4a');
+    // Shorten long names
+    text.textContent = s.name.length > 18 ? s.name.substring(0,16)+'…' : s.name;
+
+    g.appendChild(circle); g.appendChild(text);
+    g.addEventListener('click', () => selectStation(s.name));
+    g.addEventListener('mouseenter', () => { circle.setAttribute('r','9'); circle.setAttribute('fill','#fdeaed'); });
+    g.addEventListener('mouseleave', () => { circle.setAttribute('r','6'); circle.setAttribute('fill','white'); });
+    svg.appendChild(g);
+  });
+}
+buildMap();
+
+// Pan/Zoom
+let mapTransform = {x:0,y:0,scale:1};
+let dragging = false, dragStart = {x:0,y:0}, transformStart = {x:0,y:0};
+const mapContainer = document.getElementById('map-container');
+const mapSvg = document.getElementById('map-svg');
+
+function applyMapTransform() {
+  mapSvg.style.transform = `translate(${mapTransform.x}px,${mapTransform.y}px) scale(${mapTransform.scale})`;
+  mapSvg.style.transformOrigin = 'top left';
+}
+
+mapContainer.addEventListener('mousedown', e => {
+  dragging = true; dragStart={x:e.clientX,y:e.clientY}; transformStart={...mapTransform};
+});
+window.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  mapTransform.x = transformStart.x + (e.clientX - dragStart.x);
+  mapTransform.y = transformStart.y + (e.clientY - dragStart.y);
+  applyMapTransform();
+});
+window.addEventListener('mouseup', () => { dragging = false; });
+mapContainer.addEventListener('wheel', e => {
+  e.preventDefault();
+  const factor = e.deltaY < 0 ? 1.1 : 0.9;
+  mapTransform.scale = Math.max(0.4, Math.min(3, mapTransform.scale * factor));
+  applyMapTransform();
+}, {passive:false});
+function zoomMap(factor) {
+  mapTransform.scale = Math.max(0.4, Math.min(3, mapTransform.scale * factor));
+  applyMapTransform();
+}
+
+function switchView(v) {
+  document.getElementById('stationList').style.display = v==='list' ? 'block' : 'none';
+  document.getElementById('map-container').style.display = v==='map' ? 'block' : 'none';
+  document.getElementById('map-container').className = v==='map' ? 'active' : '';
+  document.getElementById('vtList').classList.toggle('active', v==='list');
+  document.getElementById('vtMap').classList.toggle('active', v==='map');
+  document.getElementById('searchInput').parentElement.style.display = v==='list' ? 'block' : 'none';
+}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+function goToScreen(n, view) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen${n}`).classList.add('active');
+  updateStepper(n);
+  if (n === 2) {
+    const v = view || 'list';
+    switchView(v);
+    document.getElementById('searchInput').value = '';
+    renderList();
+  }
+  if (n === 4) updatePaymentSummary();
+  if (n === 5) generateTicket();
+}
+
+function updateStepper(active) {
+  for (let i=1; i<=5; i++) {
+    const el = document.getElementById(`step${i}`);
+    el.classList.remove('active','done');
+    if (i < active) el.classList.add('done');
+    else if (i === active) el.classList.add('active');
+  }
+}
+
+function selectStation(name) {
+  state.selectedStation = name;
+  document.getElementById('toStation').textContent = name;
+  goToScreen(3);
+}
+
+/* ══════════════════════════════════════════
+   JOURNEY OPTIONS
+══════════════════════════════════════════ */
+function changeQty(type, delta) {
+  if (type === 'adult') {
+    state.adults = Math.max(1, state.adults + delta);
+    document.getElementById('adultQty').value = String(state.adults).padStart(2,'0');
+  } else {
+    state.children = Math.max(0, state.children + delta);
+    document.getElementById('childQty').value = String(state.children).padStart(2,'0');
+  }
+}
+
+function selectOption(type, value, el) {
+  const parent = el.closest('.jcard') || el.closest('.option-row') || el.parentElement;
+  // Deselect siblings in same group
+  const siblings = type === 'trainType'
+    ? el.closest('.option-row').querySelectorAll('.option-btn')
+    : el.parentElement.querySelectorAll('.option-btn');
+  siblings.forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  if (type === 'journeyType') state.journeyType = value;
+  if (type === 'class') state.ticketClass = value;
+  if (type === 'trainType') state.trainType = value;
+}
+
+/* ══════════════════════════════════════════
+   FARES (approximate ₹)
+══════════════════════════════════════════ */
+function calcFare(distKm, cls, jType, adults, children) {
+  const baseRates = {'First Class': 1.8, 'Second Class': 0.85, 'AC': 3.2};
+  const rate = baseRates[cls] || 0.85;
+  let base = Math.max(5, Math.round(distKm * rate));
+  const adultFare = base * adults;
+  const childFare = Math.round(base * 0.5) * children;
+  const total = (adultFare + childFare) * (jType === 'return' ? 2 : 1);
+  return total;
+}
+
+function getStationDist(name) {
+  const s = uniqueStations.find(st => st.name === name);
+  return s ? s.dist : 20;
+}
+
+/* ══════════════════════════════════════════
+   PAYMENT SUMMARY
+══════════════════════════════════════════ */
+function selectPayMethod(el, method) {
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  el.classList.add('selected');
+  state.payMethod = method;
+}
+
+function updatePaymentSummary() {
+  const dist = getStationDist(state.selectedStation);
+  state.fare = calcFare(dist, state.ticketClass, state.journeyType, state.adults, state.children);
+  document.getElementById('sum_route').textContent = `Mumbai CSMT → ${state.selectedStation}`;
+  document.getElementById('sum_class').textContent = `${state.ticketClass} • ${state.trainType}`;
+  document.getElementById('sum_journey').textContent = state.journeyType === 'return' ? 'Return' : 'Single';
+  const paxParts = [];
+  if (state.adults > 0) paxParts.push(`${state.adults} Adult${state.adults>1?'s':''}`);
+  if (state.children > 0) paxParts.push(`${state.children} Child${state.children>1?'ren':''}`);
+  document.getElementById('sum_pax').textContent = paxParts.join(', ');
+  document.getElementById('sum_total').textContent = `₹${state.fare.toFixed(2)}`;
+}
+
+function confirmPayment() {
+  goToScreen(5);
+}
+
+/* ══════════════════════════════════════════
+   TICKET GENERATION
+══════════════════════════════════════════ */
+function randId() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let id = '';
+  for (let i=0;i<9;i++) id += chars[Math.floor(Math.random()*chars.length)];
+  return id;
+}
+
+function generateTicket() {
+  state.ticketId = randId();
+  const now = new Date();
+  const valid = new Date(now.getTime() + 60*60*1000);
+  const fmt = d => `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+
+  const dist = getStationDist(state.selectedStation);
+  const shortTo = state.selectedStation.replace('Chhatrapati Shivaji Maharaj Terminus ','').toUpperCase().substring(0,6);
+
+  document.getElementById('tkt_id').textContent = state.ticketId;
+  document.getElementById('tkt_from').textContent = 'CSMT';
+  document.getElementById('tkt_to').textContent = shortTo;
+  const paxParts = [];
+  if (state.adults > 0) paxParts.push(`${state.adults} Adult${state.adults>1?'s':''}`);
+  if (state.children > 0) paxParts.push(`${state.children} Child${state.children>1?'ren':''}`);
+  document.getElementById('tkt_pax').textContent = paxParts.join(', ') || '1 Adult';
+  document.getElementById('tkt_dist').textContent = `${dist} km`;
+  document.getElementById('tkt_booked').textContent = fmt(now);
+  document.getElementById('tkt_valid').textContent = fmt(valid);
+  document.getElementById('tkt_class_bar').textContent = state.ticketClass === 'First Class' ? 'FIRST' : state.ticketClass === 'AC' ? 'AC' : 'SECOND';
+  document.getElementById('tkt_jtype_bar').textContent = state.trainType.toUpperCase();
+  document.getElementById('tkt_jt_bar').textContent = state.journeyType === 'return' ? 'RETURN' : 'JOURNEY';
+  document.getElementById('tkt_fare').textContent = `₹${state.fare.toFixed(2)}`;
+
+  // Platform
+  document.getElementById('platNum').textContent = Math.floor(Math.random()*4)+1;
+
+  // QR
+  document.getElementById('qr-code').innerHTML = '';
+  const qrText = `Ticket ID: ${state.ticketId} | From: CSMT | To: ${state.selectedStation} | ${paxParts.join(', ')} | Class: ${state.ticketClass} | Fare: Rs.${state.fare.toFixed(2)} | Valid: ${fmt(valid)}`;
+  try {
+    new QRCode(document.getElementById('qr-code'), {
+      text: qrText,
+      width: 150, height: 150,
+      colorDark: '#1e2d4a', colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) { console.warn('QR gen failed:', e); }
+}
+
+/* ══════════════════════════════════════════
+   RESET
+══════════════════════════════════════════ */
+function resetApp() {
+  state.selectedStation = '';
+  state.adults = 1; state.children = 0;
+  state.journeyType = 'single'; state.ticketClass = 'First Class'; state.trainType = 'Local';
+  state.payMethod = 'upi'; state.ticketId = ''; state.fare = 0;
+  // Reset UI
+  document.getElementById('adultQty').value = '01';
+  document.getElementById('childQty').value = '00';
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('jt_single').classList.add('selected');
+  document.getElementById('cl_first').classList.add('selected');
+  document.querySelector('[onclick*="Local"]')?.classList.add('selected');
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('selected'));
+  document.querySelector('.pay-method').classList.add('selected');
+  goToScreen(1);
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+applyTranslations();
+</script>
+</body>
+</html>

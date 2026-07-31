@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+  ═══════════════════════════════════════════════════════════════════
+  RÉSUMÉ — ARNAV PATIL  (part of the portfolio template)
+  ───────────────────────────────────────────────────────────────────
+  This page is plain HTML — edit the text directly in the sections
+  below (they're clearly labelled). The DOWNLOAD PDF button points at
+  assets/cv/Arnav_Patil_CV.pdf — replace that file to update the PDF.
+  ═══════════════════════════════════════════════════════════════════
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Résumé — Arnav Patil</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%230B0B0E'/%3E%3Cpath d='M50 18 82 50 50 82 18 50Z' fill='%237E92FF'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;800&family=Schibsted+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0B0B0E;--bg-2:#121218;--bg-3:#17171f;
+  --ivory:#E9E7DF;--dim:#9A9A93;--faint:#66665f;
+  --line:rgba(233,231,223,.10);--line-strong:rgba(233,231,223,.22);
+  --indigo:#7E92FF;--violet:#B48CFF;--red:#FF6276;
+  --grad:linear-gradient(92deg,#7E92FF 0%,#B48CFF 48%,#FF6276 100%);
+  --accent:var(--indigo);--accent-glow:rgba(126,146,255,.3);
+  --font-display:'Unbounded',sans-serif;--font-body:'Schibsted Grotesk',sans-serif;--font-mono:'Space Mono',monospace;
+  --head-h:64px;--pad:clamp(20px,4.5vw,52px);--maxw:1200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+/* hidden page scrollbar — the progress bar is the scroll indicator */
+html{scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+body{background:var(--bg);color:var(--ivory);font-family:var(--font-body);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.5}
+::selection{background:var(--accent);color:#0B0B0E}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+/* (film-grain filter removed for image clarity) */
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;display:flex;justify-content:space-evenly}
+.bg-grid span{width:1px;height:100%;background:rgba(233,231,223,.035)}
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:400}
+.progress span{display:block;height:100%;background:var(--grad);transform:scaleX(0);transform-origin:left}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+.rv{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.16,.84,.28,1),transform .8s cubic-bezier(.16,.84,.28,1)}
+.rv.in{opacity:1;transform:none}
+.sec-label{
+  display:inline-flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;color:var(--dim);
+  border:1px solid var(--line-strong);padding:9px 16px;background:rgba(16,16,22,.65);
+  clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,11px 100%,0 calc(100% - 11px));
+}
+/* cyberpunk layer — scanlines + glitch */
+body::before{content:"";position:fixed;inset:0;z-index:450;pointer-events:none;opacity:.045;background:repeating-linear-gradient(0deg,transparent 0 2px,#000 2px 3px)}
+@keyframes glitch{
+  0%,90%,100%{text-shadow:none;transform:none}
+  91%{text-shadow:-3px 0 var(--red),3px 0 #5CE1FF}
+  93%{text-shadow:3px 0 var(--red),-3px 0 #5CE1FF;transform:translateX(2px)}
+  95%{text-shadow:-2px 0 #5CE1FF,2px 0 var(--violet);transform:translateX(-2px)}
+  97%{text-shadow:none}
+}
+.sec-label i{width:8px;height:8px;background:var(--accent);transform:rotate(45deg);box-shadow:0 0 10px var(--accent-glow)}
+.wm-wrap{position:absolute;inset:0;overflow:hidden;pointer-events:none;user-select:none;display:flex;align-items:center}
+.wm{font-family:var(--font-display);font-weight:800;white-space:nowrap;font-size:clamp(90px,17vw,240px);line-height:1;color:transparent;-webkit-text-stroke:1px rgba(233,231,223,.07);will-change:transform}
+
+header.site{position:fixed;top:0;left:0;right:0;z-index:300;height:var(--head-h);display:flex;align-items:center;background:rgba(11,11,14,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.head-in{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:16px;white-space:nowrap}
+.brand em{font-style:normal;width:9px;height:9px;background:var(--grad);transform:rotate(45deg);flex:none}
+.head-links{display:flex;align-items:center;gap:22px;font-family:var(--font-mono);font-size:12px;letter-spacing:.08em}
+.head-links a{color:var(--dim);transition:color .25s;white-space:nowrap}
+.head-links a:hover{color:var(--ivory)}
+.head-links .pill{border:1px solid var(--line-strong);border-radius:999px;padding:9px 18px;color:var(--ivory)}
+.head-links .pill:hover{background:var(--accent);color:#0B0B0E;border-color:var(--accent)}
+
+.r-hero{position:relative;padding:calc(var(--head-h) + 90px) 0 40px;z-index:1}
+.r-hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(38px,7vw,92px);line-height:1.02;text-transform:uppercase;letter-spacing:-.01em;margin-top:22px;animation:glitch 8s infinite}
+.r-hero h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.r-role{margin-top:18px;font-family:var(--font-mono);font-size:13px;letter-spacing:.12em;color:var(--dim)}
+.r-profile{margin-top:24px;color:var(--dim);font-size:clamp(15px,1.5vw,18px);line-height:1.7;max-width:64ch}
+.chips{margin-top:32px;display:flex;gap:12px;flex-wrap:wrap}
+.chips a,.chips span{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--dim);border:1px solid var(--line-strong);border-radius:999px;padding:10px 18px;transition:.25s}
+.chips a:hover{color:#0B0B0E;background:var(--ivory);border-color:var(--ivory)}
+.dl{display:inline-flex;align-items:center;gap:10px;background:var(--ivory);color:#0B0B0E !important;border-color:var(--ivory) !important;font-weight:700}
+.dl:hover{background:var(--indigo) !important;border-color:var(--indigo) !important;box-shadow:0 0 30px var(--accent-glow)}
+
+.hl-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+.hl-card{background:linear-gradient(160deg,var(--bg-2),var(--bg-3));border:1px solid var(--line-strong);border-radius:14px;padding:26px;text-align:center}
+.hl-card b{font-family:var(--font-display);font-weight:600;font-size:clamp(20px,2.6vw,30px);display:block;letter-spacing:-.01em}
+.hl-card span{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;color:var(--faint);display:block;margin-top:10px}
+
+section.r{position:relative;z-index:1;padding:80px 0 10px}
+.r h2{font-family:var(--font-display);font-weight:600;font-size:clamp(24px,3.4vw,40px);text-transform:uppercase;letter-spacing:-.01em;margin-top:16px}
+.xp{margin-top:40px;border-top:1px solid var(--line)}
+.xp-row{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:34px 6px;border-bottom:1px solid var(--line);transition:.28s}
+.xp-row:hover{padding-left:20px;background:linear-gradient(90deg,rgba(126,146,255,.06),transparent 60%)}
+.xp-when{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--faint);line-height:1.9}
+.xp-when b{color:var(--accent);font-weight:400;display:block}
+.xp-body h3{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.xp-body h4{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--dim);font-weight:400;margin-top:6px}
+.xp-body p{margin-top:14px;color:var(--dim);font-size:15px;line-height:1.65;max-width:66ch}
+.xp-tags{margin-top:14px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.12em;color:var(--faint)}
+
+.sk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.sk-card{background:linear-gradient(160deg,var(--bg-2),var(--bg-3));border:1px solid var(--line-strong);border-radius:14px;padding:28px}
+.sk-card h3{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;color:var(--accent);font-weight:400}
+.sk-card ul{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.sk-card li{font-size:15px;color:var(--dim);border-bottom:1px solid var(--line);padding-bottom:10px}
+.ach{margin-top:26px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;color:var(--dim);line-height:2.2}
+.ach b{color:var(--ivory);font-weight:400}
+
+.r-cta{position:relative;z-index:1;text-align:center;padding:90px 0 100px}
+.r-cta h2{font-family:var(--font-display);font-weight:800;font-size:clamp(28px,5vw,64px);text-transform:uppercase;letter-spacing:-.01em}
+.r-cta h2 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+footer.site{border-top:1px solid var(--line);position:relative;z-index:1}
+.foot-in{max-width:var(--maxw);margin:0 auto;padding:28px var(--pad);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;color:var(--faint)}
+.foot-in a{color:var(--dim);transition:.25s}
+.foot-in a:hover{color:var(--accent)}
+
+@media (max-width:820px){
+  .hl-row,.sk-grid{grid-template-columns:1fr}
+  .xp-row{grid-template-columns:1fr;gap:10px}
+  .head-links{gap:14px}
+  .head-links .hide-sm{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none;transition:none}
+  .xp-row{transition:none}
+  .r-hero h1{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+<div class="bg-grid" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+
+<header class="site">
+  <div class="head-in">
+    <a class="brand" href="index.html"><em></em><span>Arnav Patil</span></a>
+    <nav class="head-links" aria-label="Page">
+      <a href="index.html">← HOME</a>
+      <a class="hide-sm" href="work.html">WORK</a>
+      <a class="hide-sm" href="index.html#contact">CONTACT</a>
+      <a class="pill" href="assets/cv/Arnav_Patil_CV.pdf" download>DOWNLOAD PDF ↓</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ══════════ INTRO ══════════ -->
+  <section class="r-hero" aria-label="Résumé intro">
+    <div class="wm-wrap" aria-hidden="true"><span class="wm" id="wm" data-scrub="120">RÉSUMÉ — RÉSUMÉ — RÉSUMÉ</span></div>
+    <div class="wrap">
+      <p class="sec-label rv"><i></i>CURRICULUM VITAE</p>
+      <h1 class="rv">Arnav <em>Patil</em></h1>
+      <p class="r-role rv">GRAPHIC DESIGNER &amp; VIDEO EDITOR — BRAND, PACKAGING &amp; MOTION</p>
+      <p class="r-profile rv">
+        A sharp, imaginative creator with a builder's mindset and a strong eye for quality.
+        I work across branding, packaging, motion and social content, pairing design craft with a
+        fast, resourceful approach to generative-AI workflows — always aiming for the clearest,
+        most effective execution.
+      </p>
+      <div class="chips rv">
+        <span>MUMBAI, INDIA</span>
+        <a href="mailto:arnavsagarpatil@gmail.com">arnavsagarpatil@gmail.com</a>
+        <a href="tel:+919152994295">+91 91529 94295</a>
+        <a href="https://behance.net/arnavpatil95" target="_blank" rel="noopener">BEHANCE ↗</a>
+        <a href="https://www.linkedin.com/in/arnavpatil95" target="_blank" rel="noopener">LINKEDIN ↗</a>
+        <a class="dl" href="assets/cv/Arnav_Patil_CV.pdf" download>DOWNLOAD PDF ↓</a>
+      </div>
+      <div class="hl-row rv">
+        <div class="hl-card"><b>10+</b><span>BRANDS SHIPPED</span></div>
+        <div class="hl-card"><b>4</b><span>DESIGN ROLES</span></div>
+        <div class="hl-card"><b>GEN-AI</b><span>VIDEO & IMAGE WORKFLOWS</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ EXPERIENCE ══════════ -->
+  <section class="r" aria-label="Experience">
+    <div class="wrap">
+      <p class="sec-label rv"><i></i>01 — EXPERIENCE</p>
+      <h2 class="rv">Where I've Worked</h2>
+      <div class="xp">
+
+        <div class="xp-row rv">
+          <div class="xp-when"><b>MAR 2026 — PRESENT</b>CURRENT</div>
+          <div class="xp-body">
+            <h3>Freelance Designer</h3>
+            <h4>INDEPENDENT PRACTICE</h4>
+            <p>Independent design practice delivering brand identity, packaging and web for retail and
+               hospitality clients. Built the logo, brand system and FMCG packaging design for Fox Harvest
+               Foods, and led logo, branding and end-to-end website design and maintenance for Parvv Banquets.</p>
+            <p class="xp-tags">BRAND IDENTITY · FMCG PACKAGING · WEB DESIGN · LOGO SYSTEMS</p>
+          </div>
+        </div>
+
+        <div class="xp-row rv">
+          <div class="xp-when"><b>MAY 2026 — JUL 2026</b>MUMBAI</div>
+          <div class="xp-body">
+            <h3>Graphic Design Intern</h3>
+            <h4>CONVERGENSEE INDIA MARTECH PVT. LTD.</h4>
+            <p>Produced multi-format creative for national brands including Mahindra Auto, Kotak Life
+               Insurance, Blue Dart, SBI, Fair Chance Learning and Equitas — spanning social statics, reels,
+               motion graphics, emailers, pitch decks, concept videos and carousels, alongside size and
+               language adaptations. Applied generative AI to deliver on-brief statics and video with strong
+               attention to detail and efficient use of resources.</p>
+            <p class="xp-tags">MOTION GRAPHICS · SOCIAL & REELS · PITCH DECKS · GENERATIVE AI</p>
+          </div>
+        </div>
+
+        <div class="xp-row rv">
+          <div class="xp-when"><b>MAY 2025 — JUL 2025</b>MUMBAI</div>
+          <div class="xp-body">
+            <h3>Graphic Design Intern</h3>
+            <h4>DIGERATIE XP PRIVATE LIMITED</h4>
+            <p>Created social-first creative and website advertisements for brands including STIHL India and
+               Ailo, while building a working understanding of studio workflow and client delivery.
+               Commended for creativity, professionalism and work ethic, with a letter of recommendation.</p>
+            <p class="xp-tags">SOCIAL DESIGN · WEB ADS · BRAND SUPPORT</p>
+          </div>
+        </div>
+
+        <div class="xp-row rv">
+          <div class="xp-when"><b>OCT 2024 — DEC 2024</b></div>
+          <div class="xp-body">
+            <h3>Creatives Member</h3>
+            <h4>RENAISA</h4>
+            <p>Designed social media posts and Instagram reels, and ideated and produced pitch videos for
+               prospective clients.</p>
+            <p class="xp-tags">SOCIAL MEDIA · REELS · PITCH VIDEOS</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ SKILLS ══════════ -->
+  <section class="r" aria-label="Skills">
+    <div class="wrap">
+      <p class="sec-label rv"><i></i>02 — SKILLS</p>
+      <h2 class="rv">What I Work With</h2>
+      <div class="sk-grid rv">
+        <div class="sk-card">
+          <h3>DESIGN</h3>
+          <ul><li>Adobe Illustrator</li><li>Adobe Photoshop</li><li>Adobe InDesign</li></ul>
+        </div>
+        <div class="sk-card">
+          <h3>MOTION &amp; VIDEO</h3>
+          <ul><li>After Effects</li><li>Premiere Pro</li><li>Higgsfield · Magnific (Gen-AI)</li></ul>
+        </div>
+        <div class="sk-card">
+          <h3>PRACTICE</h3>
+          <ul><li>Branding &amp; FMCG Packaging</li><li>Social Design &amp; Motion Graphics</li><li>Web Design · Blender · Unity</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ EDUCATION ══════════ -->
+  <section class="r" aria-label="Education">
+    <div class="wrap">
+      <p class="sec-label rv"><i></i>03 — EDUCATION</p>
+      <h2 class="rv">Where I've Studied</h2>
+      <div class="xp">
+
+        <div class="xp-row rv">
+          <div class="xp-when"><b>2024 — 2028</b>ENROLLED</div>
+          <div class="xp-body">
+            <h3>B.Des — Communication Design</h3>
+            <h4>ATLAS SKILLTECH UNIVERSITY, MUMBAI</h4>
+          </div>
+        </div>
+
+        <div class="xp-row rv">
+          <div class="xp-when"><b>2023 — 2026</b></div>
+          <div class="xp-body">
+            <h3>B.Com — Commerce</h3>
+            <h4>R.A. PODAR COLLEGE OF COMMERCE &amp; ECONOMICS</h4>
+          </div>
+        </div>
+
+        <div class="xp-row rv">
+          <div class="xp-when"><b>BOARDS — 89%</b></div>
+          <div class="xp-body">
+            <h3>Secondary Education</h3>
+            <h4>SMT. SULOCHANADEVI SINGHANIA SCHOOL</h4>
+          </div>
+        </div>
+
+      </div>
+      <p class="ach rv"><b>ALSO:</b> DESIGN HEAD — ECONOMICS CLUB · <b>BEST DESIGN MEMBER</b> — ISMUN 2K22</p>
+    </div>
+  </section>
+
+  <!-- ══════════ CTA ══════════ -->
+  <section class="r-cta" aria-label="Contact">
+    <div class="wrap">
+      <h2 class="rv">Want the full story? <em>Let's talk.</em></h2>
+      <div class="chips rv" style="justify-content:center">
+        <a href="mailto:arnavsagarpatil@gmail.com">arnavsagarpatil@gmail.com ↗</a>
+        <a class="dl" href="assets/cv/Arnav_Patil_CV.pdf" download>DOWNLOAD PDF ↓</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="foot-in">
+    <span id="footCopy">© 2026 ARNAV PATIL</span>
+    <a href="index.html">BACK TO HOME ↖</a>
+  </div>
+</footer>
+
+<script>
+document.getElementById('footCopy').textContent = `© ${new Date().getFullYear()} ARNAV PATIL`;
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* reveal on scroll */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), { threshold:.12, rootMargin:'0px 0px -6% 0px' });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+/* progress bar + watermark scrub */
+const bar = document.getElementById('progressBar'), wm = document.getElementById('wm');
+let ticking = false;
+addEventListener('scroll', () => {
+  if (ticking) return; ticking = true;
+  requestAnimationFrame(() => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? scrollY/max : 0})`;
+    if (!RM){
+      const r = wm.parentElement.getBoundingClientRect();
+      const p = (innerHeight - r.top)/(innerHeight + r.height);
+      wm.style.transform = `translateX(${(p - .5) * 2 * +wm.dataset.scrub * -1}px)`;
+    }
+    ticking = false;
+  });
+}, { passive:true });
+</script>
+</body>
+</html>
